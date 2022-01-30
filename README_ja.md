@@ -6,10 +6,7 @@ Next.jsを用いて開発環境を構築するため、以下のメリットが�
 
 - TypeScript/JavaScript のどちらでもコーディングが可能。
 - eslintによるコードチェック・支援
-- 
-
-また、設定がほぼ不要
-  - 
+- 開発環境構築や開発中のビルドの自動化
 
 ## 使い方
 
@@ -24,12 +21,11 @@ $ npm run dev
 ## 注意点
 
 - Next.js/Reactを用いる都合上、p5.jsのインスタンスモードでコーディングする必要があります。インスタンスモードについてはこちらを参照してください。
-- 
-
 
 
 ## refs
 
-- [react-p5 - npm](https://www.npmjs.com/package/react-p5)
-
-// FIXME react-p5が最新のp5.js, @types/p5 を使う場合にエラーが一部でる。
+- [react-p5 - npm](https://www.npmjs.com/package/react-p5) (p5:1.1.9 以上のバージョンでは、react-p5の型の互換性がないため、自分で修正する必要がある。)
+- [gonzarascon/p5-next: P5.js + Next.js with Typescript](https://github.com/gonzarascon/p5-next)
+- [fal-works/p5js-templates: Create p5.js sketches with typical JavaScript development tools. Unofficial.](https://github.com/fal-works/p5js-templates)
+  - Next.js/Reactによらず、単体ビルドしたい場合はこちらを使うと便利です。
