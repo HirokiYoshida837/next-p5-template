@@ -2,11 +2,9 @@
 
 p5.js x next.js x typescript
 
-
 ## about
 
 this project is p5.js sketching template for next.js and typescript.
-
 
 ## refs
 

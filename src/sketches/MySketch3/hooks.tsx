@@ -1,6 +1,5 @@
-import React, {useState} from "react";
-import {Position} from "@/sketches/MySketch3/types";
-
+import React, { useState } from "react";
+import { Position } from "@/sketches/MySketch3/types";
 
 export const useRadiusHooks = () => {
   const [radius, setRadius] = useState(30);
@@ -13,31 +12,30 @@ export const useRadiusHooks = () => {
   return {
     radius,
     setRadius,
-    changeRadius
-  }
-}
+    changeRadius,
+  };
+};
 
 export const usePosHooks = () => {
-
-  const [position, setPosition] = useState<Position>({x: 250, y: 250})
+  const [position, setPosition] = useState<Position>({ x: 250, y: 250 });
 
   const changeEllipsePosX = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let getValue: number = Number(e.target.value);
-    setPosition(value => {
+    setPosition((value) => {
       return {
         x: getValue,
-        y: value.y
-      }
+        y: value.y,
+      };
     });
   };
 
   const changeEllipsePosY = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let getValue: number = Number(e.target.value);
-    setPosition(value => {
+    setPosition((value) => {
       return {
         x: value.x,
-        y: getValue
-      }
+        y: getValue,
+      };
     });
   };
 
@@ -45,6 +43,6 @@ export const usePosHooks = () => {
     position,
     setPosition,
     changeEllipsePosX,
-    changeEllipsePosY
-  }
-}
+    changeEllipsePosY,
+  };
+};
