@@ -1,9 +1,9 @@
 import {NextPage} from "next"
-import {MySketch1} from "@/sketches/MySketch1";
+import {MySketch2} from "@/sketches/MySketch2/MySketch2";
 
 const Sketch: NextPage = () => {
   return (
-    <MySketch1/>
+    <MySketch2/>
   )
 }
 
