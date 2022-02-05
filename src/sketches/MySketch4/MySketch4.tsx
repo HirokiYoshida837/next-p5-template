@@ -1,13 +1,25 @@
 import React from "react";
 import p5Types from "p5";
 
-import { SketchTemplate } from "@/sketchTemplate";
-import {
-  createAttractor,
-  createNode,
-  PointObj,
-} from "@/sketches/MySketch4/types/Point";
-import { randomBetween } from "@/util/RandomUtils";
+import {SketchTemplate} from "@/sketchTemplate";
+import {createAttractor, createNode, PointObj,} from "@/sketches/MySketch4/types/Point";
+import {randomBetween} from "@/util/RandomUtils";
+import {searchNearestNode, searchNears} from "@/sketches/MySketch4/NodeUtils/NodeUtils";
+
+/**
+ * Deleteするリストを取得
+ * @param p5
+ * @param killrad
+ */
+function createWillDeleteList(p5: p5Types, killrad: number) {
+  const willDeleteList = nodes.map((item) => {
+    return searchNears(p5, item.posX, item.posY, attractors, killrad);
+  });
+  // 重複排除のためにsetに
+  return Array.from(new Set(
+    new Array<number>().concat(...(willDeleteList))
+  ));
+}
 
 /**
  * sample sketch for complex logics </br>
@@ -15,6 +27,16 @@ import { randomBetween } from "@/util/RandomUtils";
  * @constructor
  */
 export const MySketch4: React.FC = () => {
+
+  const canvasSize = {
+    x: 1000,
+    y: 1000,
+  };
+
+  const infrad = 50;
+  const rad = 10;
+  const killrad = 25;
+
   const setUp = (p5: p5Types, canvasParentRef: Element) => {
     p5.createCanvas(canvasSize.x, canvasSize.y).parent(canvasParentRef);
     p5.frameRate(10);
@@ -32,9 +54,9 @@ export const MySketch4: React.FC = () => {
     }
 
     // nodeの初期位置は自分で指定する。
-    nodes.push(createNode({ index: 2002, posX: 250, posY: 250 }));
-    nodes.push(createNode({ index: 2003, posX: 800, posY: 400 }));
-    nodes.push(createNode({ index: 2003, posX: 700, posY: 900 }));
+    nodes.push(createNode({index: 2002, posX: 250, posY: 250}));
+    nodes.push(createNode({index: 2003, posX: 800, posY: 400}));
+    nodes.push(createNode({index: 2003, posX: 700, posY: 900}));
   };
 
   const draw = (p5: p5Types) => {
@@ -89,16 +111,14 @@ export const MySketch4: React.FC = () => {
       );
     });
 
-    const willDeleteList = nodes.map((item) => {
-      return searchNears(p5, item.posX, item.posY, attractors, killrad);
-    });
-    const d = new Array<number>().concat(...(willDeleteList as any));
-    const willDelete = Array.from(new Set(d));
+    const willDelete = createWillDeleteList(p5, killrad);
 
-    attractors = attractors.filter((val, index) => {
+    attractors = attractors.filter((_, index) => {
       return !willDelete.includes(index);
     });
 
+    
+    // draw section
     for (let attractor of attractors) {
       attractor.draw(p5);
     }
@@ -110,78 +130,11 @@ export const MySketch4: React.FC = () => {
 
   return (
     <>
-      <SketchTemplate setup={setUp} draw={draw} />
+      <SketchTemplate setup={setUp} draw={draw}/>
     </>
   );
 };
 
-const canvasSize = {
-  x: 1000,
-  y: 1000,
-};
-
-const infrad = 50;
-
-const rad = 10;
-const killrad = 25;
 
 let attractors = new Array<PointObj>();
-
 let nodes = new Array<PointObj>();
-
-/**
- * 一番近いNodeを探します。
- * @param p5
- * @param posX
- * @param posY
- * @param nodes
- * @param infrad
- */
-const searchNearestNode = (
-  p5: p5Types,
-  posX: number,
-  posY: number,
-  nodes: Array<PointObj>,
-  infrad?: number
-): number => {
-  let nearestIndex = -1;
-  let minDist = Number.MAX_SAFE_INTEGER;
-
-  for (let i = 0; i < nodes.length; i++) {
-    const d = p5.dist(posX, posY, nodes[i].posX, nodes[i].posY);
-
-    if (minDist > d) {
-      nearestIndex = i;
-      minDist = d;
-    }
-  }
-
-  if (infrad) {
-    if (minDist > infrad) {
-      return -1;
-    } else {
-      return nearestIndex;
-    }
-  } else {
-    return nearestIndex;
-  }
-};
-
-const searchNears = (
-  p5: p5Types,
-  posX: number,
-  posY: number,
-  nodes: Array<PointObj>,
-  killrad: number
-) => {
-  const nearIndexes = new Array<number>();
-
-  for (let i = 0; i < nodes.length; i++) {
-    const d = p5.dist(posX, posY, nodes[i].posX, nodes[i].posY);
-    if (d < killrad) {
-      nearIndexes.push(i);
-    }
-  }
-
-  return nearIndexes;
-};
